@@ -29,19 +29,18 @@ def main():
         
         preencher_dados_pf(driver, cpf, data_nascimento)
         clicar_botao_emitir(driver)
-        input("Pressione Enter para finalizar o processo")
 
-        print("Dados preenchidos e botão Emitir Certidão acionado com sucesso.")
+        print("Dados preenchidos e tentativa de clique no botão Emitir Certidão realizada.")
+        input("Pressione Enter para finalizar o processo")
 
     elif nome_certidao == "pj":
         cnpj = input("Informe o CNPJ da Pessoa Jurídica: ").strip()
 
         preencher_dados_pj(driver, cnpj)
         clicar_botao_emitir(driver)
+
+        print("Dados preenchidos e tentativa de clique no botão Emitir Certidão realizada.")          
         input("Pressione Enter para finalizar o processo")
-
-        print("Dados preenchidos e botão Emitir Certidão acionado com sucesso.")          
-
 
 if __name__ == "__main__":
     main()

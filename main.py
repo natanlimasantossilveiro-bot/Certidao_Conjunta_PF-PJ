@@ -1,14 +1,15 @@
-from src.navegador import abrir_navegador
-from src.emissao import (
-    clicar_botao_aceitar_cookies,
+import asyncio
+from src.emissao_nodriver import (
+    abrir_pagina_receita,
     selecionar_tipo_certidao,
     preencher_dados_pf,
-    preencher_dados_pj,
-    clicar_botao_emitir
+    clicar_botao_emitir,
+    clicar_botao_emitir_validado,
+    verificar_mensagem_erro
 )
 
 
-def main():
+async def main():
     nome_certidao = input(
         "Informe qual é o tipo de certidão que gostaria de emitir (pf/pj): "
     ).strip().lower()
@@ -18,29 +19,21 @@ def main():
             "Opção inválida. Por favor, escolha 'pf' para pessoa física ou 'pj' para pessoa jurídica."
         )
         return
-
-    driver = abrir_navegador()
-    clicar_botao_aceitar_cookies(driver)
-    selecionar_tipo_certidao(driver, nome_certidao)
-
+    
+    browser, page = await abrir_pagina_receita()
+    await selecionar_tipo_certidao(page, nome_certidao)
+    
     if nome_certidao == "pf":
         cpf = input("Informe o CPF da Pessoa Física: ").strip()
         data_nascimento = input("Informe a data de nascimento da Pessoa Física: ").strip()
-        
-        preencher_dados_pf(driver, cpf, data_nascimento)
-        clicar_botao_emitir(driver)
 
-        print("Dados preenchidos e tentativa de clique no botão Emitir Certidão realizada.")
-        input("Pressione Enter para finalizar o processo")
+        await preencher_dados_pf(page, cpf, data_nascimento)
+        await clicar_botao_emitir(page)
+        await clicar_botao_emitir_validado(page)
+        await verificar_mensagem_erro(page)
 
-    elif nome_certidao == "pj":
-        cnpj = input("Informe o CNPJ da Pessoa Jurídica: ").strip()
-
-        preencher_dados_pj(driver, cnpj)
-        clicar_botao_emitir(driver)
-
-        print("Dados preenchidos e tentativa de clique no botão Emitir Certidão realizada.")          
-        input("Pressione Enter para finalizar o processo")
+    input("Pressione Enter para finalizar o processo...")
+    await browser.stop()
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())        

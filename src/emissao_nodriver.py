@@ -57,6 +57,23 @@ async def preencher_dados_pf(page, cpf, data_nascimento):
     """)
     await page.wait(2)
 
+async def preencher_dados_pj(page, cnpj):
+    await page.evaluate(f"""
+        (() => {{
+            const campoCnpj = document.querySelector('input[name="niContribuinte"]');
+
+            if (campoCnpj) {{
+                campoCnpj.value = "{cnpj}";
+                campoCnpj.dispatchEvent(new Event('input', {{ bubbles: true }}));
+                campoCnpj.dispatchEvent(new Event('change', {{ bubbles: true }}));
+            }}
+
+            return "Campos PJ preenchidos";
+        }})()
+    """)
+
+    await page.wait(2)
+
 async def clicar_botao_emitir(page):
     resultado = await page.evaluate("""
         (() => {
@@ -110,3 +127,154 @@ async def clicar_botao_emitir_validado(page):
 
     print(resultado)
     await page.wait(5)
+
+async def verificar_resultado_emissao(page):
+    resultado = await page.evaluate("""
+        (() => {
+            const bodyText = document.body.innerText;
+
+            if (bodyText.includes('Certidão Válida Encontrada')) {
+                const botoes = Array.from(document.querySelectorAll('button'));
+
+                const botaoEmitirNova = botoes.find(botao =>
+                    botao.innerText.includes('Emitir Nova Certidão')
+                );
+
+                if (botaoEmitirNova) {
+                    botaoEmitirNova.click();
+
+                    return {
+                        status: 'emitindo_nova_certidao',
+                        mensagem: 'Certidão válida encontrada. Cliquei em Emitir Nova Certidão.'
+                    };
+                }
+
+                return {
+                    status: 'certidao_valida_sem_botao',
+                    mensagem: 'Certidão válida encontrada, mas o botão Emitir Nova Certidão não foi localizado.'
+                };
+            }
+
+            if (bodyText.includes('Não foi possível concluir a ação')) {
+                return {
+                    status: 'erro_receita',
+                    mensagem: 'A Receita Federal retornou uma mensagem de erro.'
+                };
+            }
+
+            if (bodyText.includes('Certidão emitida')) {
+                return {
+                    status: 'certidao_emitida',
+                    mensagem: 'Certidão aparentemente emitida com sucesso.'
+                };
+            }
+
+            return {
+                status: 'resultado_indefinido',
+                mensagem: 'Não foi possível identificar claramente o resultado da emissão.'
+            };
+        })()
+    """)
+
+    print("Retorno bruto: ", resultado)
+    print("Tipo do retorno: ", type(resultado))
+
+    if (
+        isinstance(resultado, list)
+        and len(resultado) > 0
+        and isinstance(resultado[0], list)
+        and len(resultado[0]) == 2
+    ):
+        resultado = {
+            chave: dados["value"]
+            for chave, dados in resultado
+        }
+
+    while isinstance(resultado, list):
+        resultado = resultado[0]
+
+    if isinstance(resultado, str):
+        resultado={
+            "status": "retorno_em_texto",
+            "mensagem": resultado
+        }
+
+    print("Resultado da emissão:")
+    print(f"Status: {resultado['status']}")
+    print(f"Mensagem: {resultado['mensagem']}")
+
+    await page.wait(2)
+
+    return resultado
+
+async def verificar_pdf_ou_mudanca_pagina(page, url_antes):
+    await page.wait(5)
+
+    url_depois = page.url
+
+    print("Verificando resultado final...")
+    print(f"URL antes: {url_antes}")
+    print(f"Url depois: {url_depois}")
+
+    if url_depois != url_antes:
+        print("A URL mudou após a emissão.")
+
+        if ".pdf" in url_depois.lower():
+            print("PDF detectado pela URL.")
+            return {
+                "status": "pdf_detectado",
+                "mensagem": "A certidão parece ter sido aberta em PDF."
+            }
+        return {
+            "status": "url_alterada",
+            "mensagem": "A página mudou após a emissão."
+        }
+    
+    texto_pagina = await page.evaluate("""
+        (() => {
+            return document.body.innerText;
+        })()
+    """)
+    if "pdf" in str (texto_pagina).lower():
+        print("Possível PDF detectado pelo contrúdo da página.")
+        return {
+            "status":"possivel_pdf",
+            "mensagem": "A página contém referência a PDF."
+        }
+    print("Nenhuma mudança clara detectada.")
+    return {
+        "status": "sem_mudança_clara",
+        "mensagem": "A URL não mudou e nenhum PDF foi identificado claramente"
+    }
+
+async def processar_certidao(tipo, documento, data_nascimento=""):
+    browser, page = await abrir_pagina_receita()
+
+    try:
+        await selecionar_tipo_certidao(page, tipo)
+
+        if tipo == "pf":
+            await preencher_dados_pf(page, documento, data_nascimento)
+
+        elif tipo == "pj":
+            await preencher_dados_pj(page, documento)
+
+        url_antes = page.url
+
+        await clicar_botao_emitir(page)
+
+        resultado = await verificar_resultado_emissao(page)
+
+        resultado_pdf = await verificar_pdf_ou_mudanca_pagina(page, url_antes)
+
+        return {
+            "linha_processada": True,
+            "tipo": tipo,
+            "documento": documento,
+            "resultado_emissao": resultado,
+            "resultado_pdf": resultado_pdf
+        }
+
+    finally:
+        await page.wait(3)
+        await browser.stop()

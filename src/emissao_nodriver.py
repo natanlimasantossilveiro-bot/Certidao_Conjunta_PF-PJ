@@ -247,6 +247,32 @@ async def verificar_pdf_ou_mudanca_pagina(page, url_antes):
         "mensagem": "A URL não mudou e nenhum PDF foi identificado claramente"
     }
 
+def determinar_status_final(status_emissao, status_pdf):
+    if status_emissao in ["emitindo_nova_certidao", "certidao_emitida"]:
+        return {
+            "status_final": "sucesso_confirmado",
+            "mensagem_final": "A emissão foi concluída com forte indicação de sucesso."
+        }
+    if (
+        status_emissao == "resultado_indefinido"
+        and status_pdf in ["url_alterada", "pdf_detectado", "possivel_pdf"]
+    ):
+        return {
+            "status_final": "sucesso_provavel",
+            "mensagem_final": "A emissão não foi identificada claramente por texto, mas o fluxo avançou normalmente."
+        }
+    
+    if status_emissao == "erro_receita":
+        return {
+            "status_final": "erro_receita",
+            "mensagem_final": "A Receita Federal retornou uma mensagem de erro duante a emissão"
+        }
+    
+    return {
+        "status_final": "falha_indefinida",
+        "mensagem_final": "Não foi possível confirmar com segurança o resultado final da emissão."
+    }
+
 async def processar_certidao(tipo, documento, data_nascimento=""):
     browser, page = await abrir_pagina_receita()
 
@@ -267,14 +293,22 @@ async def processar_certidao(tipo, documento, data_nascimento=""):
 
         resultado_pdf = await verificar_pdf_ou_mudanca_pagina(page, url_antes)
 
+        resultado_final = determinar_status_final(
+            resultado["status"],
+            resultado_pdf["status"]
+        )
+
         return {
             "linha_processada": True,
             "tipo": tipo,
             "documento": documento,
+            "data_nascimento": data_nascimento,
             "status_emissao": resultado["status"],
             "mensagem_emissao": resultado["mensagem"],
             "status_pdf": resultado_pdf["status"],
-            "mensagem_pdf": resultado_pdf["mensagem"]
+            "mensagem_pdf": resultado_pdf["mensagem"],
+            "status_final": resultado_final["status_final"],
+            "mensagem_final": resultado_final["mensagem_final"],
         }
 
     finally:

@@ -236,14 +236,14 @@ async def verificar_pdf_ou_mudanca_pagina(page, url_antes):
         })()
     """)
     if "pdf" in str (texto_pagina).lower():
-        print("Possível PDF detectado pelo contrúdo da página.")
+        print("Possível PDF detectado pelo conteúdo da página.")
         return {
             "status":"possivel_pdf",
             "mensagem": "A página contém referência a PDF."
         }
     print("Nenhuma mudança clara detectada.")
     return {
-        "status": "sem_mudança_clara",
+        "status": "sem_mudanca_clara",
         "mensagem": "A URL não mudou e nenhum PDF foi identificado claramente"
     }
 
@@ -271,10 +271,12 @@ async def processar_certidao(tipo, documento, data_nascimento=""):
             "linha_processada": True,
             "tipo": tipo,
             "documento": documento,
-            "resultado_emissao": resultado,
-            "resultado_pdf": resultado_pdf
+            "status_emissao": resultado["status"],
+            "mensagem_emissao": resultado["mensagem"],
+            "status_pdf": resultado_pdf["status"],
+            "mensagem_pdf": resultado_pdf["mensagem"]
         }
 
     finally:
         await page.wait(3)
-        await browser.stop()
+        browser.stop()

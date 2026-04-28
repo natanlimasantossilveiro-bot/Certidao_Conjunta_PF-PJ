@@ -1,4 +1,25 @@
 import nodriver as nd
+import os
+import shutil
+from pathlib import Path
+
+def mover_certidao_para_pasta(nome_arquivo):
+    downloads = Path.home() / "Downloads"
+    pasta_destino = Path("certidoes_emitidas")
+    pasta_destino.mkdir(exist_ok=True)
+
+    arquivos_pdf = list(downloads.glob("*.pdf"))
+
+    if not arquivos_pdf:
+        return None
+
+    arquivo_recente = max(arquivos_pdf, key=os.path.getctime)
+    
+    novo_caminho = pasta_destino /nome_arquivo
+    shutil.move(arquivo_recente, novo_caminho)
+
+    return novo_caminho
+
 
 async def abrir_pagina_receita():
     browser = await nd.start(headless=False)  # Inicia o navegador em modo não headless
@@ -293,6 +314,12 @@ async def processar_certidao(tipo, documento, data_nascimento=""):
 
         resultado_pdf = await verificar_pdf_ou_mudanca_pagina(page, url_antes)
 
+        caminho_certidao = None
+
+        if resultado_pdf["status"] in ["pdf_detectado", "url_alterada", "possivel_pdf"]:
+            nome_pdf = f"Certidao-{documento}.pdf"
+            caminho_certidao = mover_certidao_para_pasta(nome_pdf)
+
         resultado_final = determinar_status_final(
             resultado["status"],
             resultado_pdf["status"]
@@ -309,6 +336,7 @@ async def processar_certidao(tipo, documento, data_nascimento=""):
             "mensagem_pdf": resultado_pdf["mensagem"],
             "status_final": resultado_final["status_final"],
             "mensagem_final": resultado_final["mensagem_final"],
+            "caminho_certidao": str(caminho_certidao) if caminho_certidao else "",
         }
 
     finally:

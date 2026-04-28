@@ -1,0 +1,33 @@
+import csv
+from datetime import datetime
+
+def gerar_relatorio_csv(resultados_processados):
+    data_hora = datetime.now().strftime("%Y%m%d_%H%M%S")
+    nome_arquivo = f"relatorio_certidoes_{data_hora}.csv"
+
+    fieldnames=[
+        "linha_processada",
+        "tipo",
+        "documento",
+        "data_nascimento",
+        "status_emissao",
+        "mensagem_emissao",
+        "status_pdf",
+        "mensagem_pdf",
+        "status_final",
+        "mensagem_final",
+    ]
+
+    with open(nome_arquivo, mode="w", newline="", encoding="utf-8-sig") as arquivo_csv:
+        writer = csv.DictWriter(
+            arquivo_csv,
+            fieldnames=fieldnames,
+            extrasaction="ignore"
+        )
+
+        writer.writeheader()
+
+        for resultado in resultados_processados:
+            writer.writerow(resultado)
+
+    return nome_arquivo

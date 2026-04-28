@@ -265,7 +265,7 @@ def determinar_status_final(status_emissao, status_pdf):
     if status_emissao == "erro_receita":
         return {
             "status_final": "erro_receita",
-            "mensagem_final": "A Receita Federal retornou uma mensagem de erro duante a emissão"
+            "mensagem_final": "A Receita Federal retornou uma mensagem de erro durante a emissão"
         }
     
     return {

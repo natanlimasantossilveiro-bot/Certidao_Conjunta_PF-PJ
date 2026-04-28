@@ -2,6 +2,7 @@ import asyncio
 
 from src.leitor_planilha import ler_planilha_certidoes
 from src.emissao_nodriver import processar_certidao
+from src.relatorio import gerar_relatorio_csv
 
 
 async def main():
@@ -37,6 +38,8 @@ async def main():
         print(f"Mensagem emissão: {resultado['mensagem_emissao']}")
         print(f"Status PDF: {resultado['status_pdf']}")
         print(f"Mensagem PDF: {resultado['mensagem_pdf']}")
+        print(f"Status final: {resultado['status_final']}")
+        print(f"Mensagem final: {resultado['mensagem_final']}")
         print("----------------------------------------------")
 
 
@@ -67,6 +70,10 @@ async def main():
     print(f"Sucesso provável: {sucesso_provavel}")
     print(f"Erro na Receita: {erro_receita}")
     print(f"Falha Indefinida: {falha_indefinida}")
+
+    nome_relatorio = gerar_relatorio_csv(resultados_processados)
+    print(f"Relatório CSV gerado com sucesso: {nome_relatorio}")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

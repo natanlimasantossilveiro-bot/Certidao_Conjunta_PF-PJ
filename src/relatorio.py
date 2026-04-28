@@ -1,9 +1,15 @@
 import csv
 from datetime import datetime
+import os
 
 def gerar_relatorio_csv(resultados_processados):
     data_hora = datetime.now().strftime("%Y%m%d_%H%M%S")
-    nome_arquivo = f"relatorio_certidoes_{data_hora}.csv"
+    pasta_relatorios = "relatorios"
+    os.makedirs(pasta_relatorios, exist_ok=True)
+    nome_arquivo = os.path.join(
+        pasta_relatorios,
+        f"relatorio_certidoes_{data_hora}.csv"
+    )
 
     fieldnames=[
         "linha_processada",

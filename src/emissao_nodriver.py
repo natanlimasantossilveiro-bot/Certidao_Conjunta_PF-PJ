@@ -263,9 +263,13 @@ async def verificar_resultado_emissao(page):
     return resultado
 
 async def verificar_pdf_ou_mudanca_pagina(page, url_antes):
-    await page.wait(5)
+    for tentativa in range(10):
+        await page.wait(1)
 
-    url_depois = page.url
+        url_depois = page.url
+
+        if url_depois != url_antes:
+            break
 
     print("Verificando resultado final...")
     print(f"URL antes: {url_antes}")
@@ -285,11 +289,21 @@ async def verificar_pdf_ou_mudanca_pagina(page, url_antes):
             "mensagem": "A página mudou após a emissão."
         }
     
+    print("A URL não mudou. Verificando o conteúdo da página...")
+    
     texto_pagina = await page.evaluate("""
         (() => {
             return document.body.innerText;
         })()
     """)
+
+    if "Não foi possível concluir a ação" in str(texto_pagina):
+        print("Erro da Receita detectado durante a verificação final.")
+        return {
+            "status": "erro_receita_tardia",
+            "mensagem": "A Receita Federal exibiu mensagem de erro após a emissão."
+        }
+
     if "pdf" in str (texto_pagina).lower():
         print("Possível PDF detectado pelo conteúdo da página.")
         return {
@@ -317,10 +331,10 @@ def determinar_status_final(status_emissao, status_pdf):
             "mensagem_final": "A emissão não foi identificada claramente por texto, mas o fluxo avançou normalmente."
         }
     
-    if status_emissao == "erro_receita":
+    if status_emissao == "erro_receita" or status_pdf =="erro_receita_tardia":
         return {
             "status_final": "erro_receita",
-            "mensagem_final": "A Receita Federal retornou uma mensagem de erro durante a emissão"
+            "mensagem_final": "A Receita Federal retornou uma mensagem de erro durante a emissão."
         }
     
     return {

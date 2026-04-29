@@ -2,23 +2,48 @@ import nodriver as nd
 import os
 import shutil
 from pathlib import Path
+import time
 
-def mover_certidao_para_pasta(nome_arquivo):
+def listar_pdfs_downloads():
+    downloads = Path.home() / "Downloads"
+    return set(downloads.glob("*.pdf"))
+
+def mover_certidao_para_pasta(nome_arquivo, pdfs_antes):
     downloads = Path.home() / "Downloads"
     pasta_destino = Path("certidoes_emitidas")
     pasta_destino.mkdir(exist_ok=True)
 
-    arquivos_pdf = list(downloads.glob("*.pdf"))
 
-    if not arquivos_pdf:
+    arquivo_recente = None
+
+    for tentativa in range(30):
+        pdfs_depois = listar_pdfs_downloads()
+        novos_pdfs = pdfs_depois - pdfs_antes
+
+        if novos_pdfs:
+            arquivo_recente = max(novos_pdfs, key=os.path.getctime)
+            break
+
+        print(f"Aguardando aparecer novo PDF. Tentativa {tentativa + 1}/30...")
+        time.sleep(1)
+
+    if arquivo_recente is None:
+        print("Nenhum novo PDF foi encontrado na pasta Downloads")
         return None
 
-    arquivo_recente = max(arquivos_pdf, key=os.path.getctime)
-    
     novo_caminho = pasta_destino /nome_arquivo
-    shutil.move(arquivo_recente, novo_caminho)
 
-    return novo_caminho
+    for tentativa in range(30):
+        try:
+            
+            shutil.move(arquivo_recente, novo_caminho)
+            return novo_caminho
+        except PermissionError:
+            print(f"PDF ainda está sendo usado pelo navegador. Tentativa {tentativa + 1}/30...")
+            time.sleep(1)
+
+    print("Não foi possível mover o PDF: arquivo ainda em uso.")
+    return None
 
 
 async def abrir_pagina_receita():
@@ -296,6 +321,7 @@ def determinar_status_final(status_emissao, status_pdf):
 
 async def processar_certidao(tipo, documento, data_nascimento=""):
     browser, page = await abrir_pagina_receita()
+    pdfs_antes = listar_pdfs_downloads()
 
     try:
         await selecionar_tipo_certidao(page, tipo)
@@ -318,7 +344,7 @@ async def processar_certidao(tipo, documento, data_nascimento=""):
 
         if resultado_pdf["status"] in ["pdf_detectado", "url_alterada", "possivel_pdf"]:
             nome_pdf = f"Certidao-{documento}.pdf"
-            caminho_certidao = mover_certidao_para_pasta(nome_pdf)
+            caminho_certidao = mover_certidao_para_pasta(nome_pdf, pdfs_antes)
 
         resultado_final = determinar_status_final(
             resultado["status"],

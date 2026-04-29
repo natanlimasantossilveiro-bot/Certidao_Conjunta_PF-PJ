@@ -22,6 +22,7 @@ def gerar_relatorio_csv(resultados_processados):
         "mensagem_pdf",
         "status_final",
         "mensagem_final",
+        "caminho_certidao"
     ]
 
     with open(nome_arquivo, mode="w", newline="", encoding="utf-8-sig") as arquivo_csv:

@@ -40,6 +40,7 @@ async def main():
         print(f"Mensagem PDF: {resultado['mensagem_pdf']}")
         print(f"Status final: {resultado['status_final']}")
         print(f"Mensagem final: {resultado['mensagem_final']}")
+        print(f"Caminho da certidão: {resultado['caminho_certidao']or 'Não localizada/movida.'}")
         print("----------------------------------------------")
 
 

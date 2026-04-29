@@ -22,21 +22,26 @@ def mover_certidao_para_pasta(nome_arquivo, pdfs_antes):
 
         if novos_pdfs:
             arquivo_recente = max(novos_pdfs, key=os.path.getctime)
+            print(f"Novo PDF detectado: {arquivo_recente}")
             break
 
         print(f"Aguardando aparecer novo PDF. Tentativa {tentativa + 1}/30...")
         time.sleep(1)
 
     if arquivo_recente is None:
-        print("Nenhum novo PDF foi encontrado na pasta Downloads")
+        print("Nenhum novo PDF foi encontrado na pasta Downloads após 30 segundos de espera.")
         return None
 
     novo_caminho = pasta_destino /nome_arquivo
+    print(f"Movendo PDF para: {novo_caminho}")
 
     for tentativa in range(30):
         try:
             
             shutil.move(arquivo_recente, novo_caminho)
+            print("PDF movido com sucesso.")
+            print(f"Origem: {arquivo_recente}")
+            print(f"Destino final: {novo_caminho}")
             return novo_caminho
         except PermissionError:
             print(f"PDF ainda está sendo usado pelo navegador. Tentativa {tentativa + 1}/30...")
@@ -202,9 +207,13 @@ async def verificar_resultado_emissao(page):
             }
 
             if (bodyText.includes('Não foi possível concluir a ação')) {
+                const linhas = bodyText.split('\\n');
+                const linhaErro = linhas.find(linha =>
+                    linha.includes('Não foi possível concluir a ação')
+                );
                 return {
                     status: 'erro_receita',
-                    mensagem: 'A Receita Federal retornou uma mensagem de erro.'
+                    mensagem: linhaErro || 'A Receita Federal retornou uma mensagem de erro.'
                 };
             }
 
@@ -367,4 +376,7 @@ async def processar_certidao(tipo, documento, data_nascimento=""):
 
     finally:
         await page.wait(3)
-        browser.stop()
+        try:
+            browser.stop()
+        except Exception as erro:
+            print(f"Aviso ao fechar navegador: {erro}")

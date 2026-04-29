@@ -77,12 +77,12 @@ async def main():
         if resultado["status_final"] == "falha_indefinida"
     )
 
-    print(f"Total de registros válidos: {total_registros}")
-    print(f"Total de sucessos: {total_sucessos}")
-    print(f"Arquivos encontrados: {total_arquivos_encontrados}")
-    print(f"Sucesso confirmado: {sucesso_confirmado}")
-    print(f"Sucesso provável: {sucesso_provavel}")
-    print(f"Erro na receita: {erro_receita}")
+    print(f"Total de Registros Válidos: {total_registros}")
+    print(f"Total de Sucessos: {total_sucessos}")
+    print(f"Arquivos Encontrados: {total_arquivos_encontrados}")
+    print(f"Sucesso Confirmado: {sucesso_confirmado}")
+    print(f"Sucesso Provável: {sucesso_provavel}")
+    print(f"Erro na Receita: {erro_receita}")
     print(f"Falha Indefinida: {falha_indefinida}")
 
     nome_relatorio = gerar_relatorio_csv(resultados_processados)

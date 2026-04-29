@@ -40,11 +40,22 @@ async def main():
         print(f"Mensagem PDF: {resultado['mensagem_pdf']}")
         print(f"Status final: {resultado['status_final']}")
         print(f"Mensagem final: {resultado['mensagem_final']}")
+        print(f"Sucesso: {'Sim' if resultado['sucesso'] else 'Não'}")
         print(f"Caminho da certidão: {resultado['caminho_certidao']or 'Não localizada/movida.'}")
         print("----------------------------------------------")
 
 
     total_registros = len(resultados_processados)
+
+    total_sucessos = sum(
+        1 for resultado in resultados_processados
+        if resultado["sucesso"]
+    )
+
+    total_arquivos_encontrados = sum(
+        1 for resultado in resultados_processados
+        if resultado["arquivo_encontrado"]
+    )
 
     sucesso_confirmado = sum(
         1 for resultado in resultados_processados
@@ -67,9 +78,11 @@ async def main():
     )
 
     print(f"Total de registros válidos: {total_registros}")
+    print(f"Total de sucessos: {total_sucessos}")
+    print(f"Arquivos encontrados: {total_arquivos_encontrados}")
     print(f"Sucesso confirmado: {sucesso_confirmado}")
     print(f"Sucesso provável: {sucesso_provavel}")
-    print(f"Erro na Receita: {erro_receita}")
+    print(f"Erro na receita: {erro_receita}")
     print(f"Falha Indefinida: {falha_indefinida}")
 
     nome_relatorio = gerar_relatorio_csv(resultados_processados)
@@ -77,4 +90,11 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
+    try:
+        loop.run_until_complete(main())
+        loop.run_until_complete(asyncio.sleep(1))
+    finally:
+        loop.close()

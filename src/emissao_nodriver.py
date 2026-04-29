@@ -385,12 +385,18 @@ async def processar_certidao(tipo, documento, data_nascimento=""):
             "mensagem_pdf": resultado_pdf["mensagem"],
             "status_final": resultado_final["status_final"],
             "mensagem_final": resultado_final["mensagem_final"],
+            "sucesso": resultado_final["status_final"] in [
+                "sucesso_confirmado",
+                "sucesso_provavel",
+            ],
+
+            "arquivo_encontrado": bool(caminho_certidao),
             "caminho_certidao": str(caminho_certidao) if caminho_certidao else "",
         }
 
     finally:
-        await page.wait(3)
         try:
-            browser.stop()
+            if browser:
+                browser.stop()
         except Exception as erro:
             print(f"Aviso ao fechar navegador: {erro}")

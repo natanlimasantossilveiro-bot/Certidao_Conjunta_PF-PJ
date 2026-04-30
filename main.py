@@ -4,23 +4,7 @@ from src.leitor_planilha import ler_planilha_certidoes
 from src.emissao_nodriver import processar_certidao
 from src.relatorio import gerar_relatorio_csv
 
-async def executar_modo_planilha():
-    print("Modo de emissão por planilha selecionado")
-
-    caminho_planilha = input("Informe o caminho da planilha Excel: ").strip()
-
-    registros, erros = ler_planilha_certidoes(caminho_planilha)
-
-    print("\n=== ERROS ENCONTRADOS NA PLANILHA ===")
-
-    if erros:
-        for erro in erros:
-            print(f"Linha {erro['linha']}: {', '.join(erro['erros'])}")
-    else:
-        print('Nenhum erro encontrado.')
-
-    print("\n=== INICIANDO PROCESSAMENTO ===")
-
+async def processar_registros_planilha(registros):
     resultados_processados = []
 
     for registro in registros:
@@ -35,9 +19,6 @@ async def executar_modo_planilha():
         )
 
         resultados_processados.append(resultado)
-
-
-
         print(f"Status emissão: {resultado['status_emissao']}")
         print(f"Mensagem emissão: {resultado['mensagem_emissao']}")
         print(f"Status PDF: {resultado['status_pdf']}")
@@ -46,8 +27,11 @@ async def executar_modo_planilha():
         print(f"Mensagem final: {resultado['mensagem_final']}")
         print(f"Sucesso: {'Sim' if resultado['sucesso'] else 'Não'}")
         print(f"Caminho da certidão: {resultado['caminho_certidao'] or 'Não localizada/movida.'}")
-        print("-----------------------------------------------")
+        print("----------------------------------------------------")
 
+    return resultados_processados 
+
+def exibir_resumo_processamento(resultados_processados):
     total_registros = len(resultados_processados)
 
     total_sucessos = sum(
@@ -62,7 +46,7 @@ async def executar_modo_planilha():
 
     sucesso_confirmado = sum(
         1 for resultado in resultados_processados
-        if resultado["status_final"] == "sucesso_confirmado"
+        if resultado['status_final'] == "sucesso_confirmado"
     )
 
     sucesso_provavel = sum(
@@ -80,6 +64,7 @@ async def executar_modo_planilha():
         if resultado["status_final"] == "falha_indefinida"
     )
 
+    print("\n=== RESUMO FINAL DO PROCESSAMENTO ===")
     print(f"Total de Registros Válidos: {total_registros}")
     print(f"Total de Sucessos: {total_sucessos}")
     print(f"Arquivos Encontrados: {total_arquivos_encontrados}")
@@ -87,6 +72,28 @@ async def executar_modo_planilha():
     print(f"Sucesso Provável: {sucesso_provavel}")
     print(f"Erro na Receita: {erro_receita}")
     print(f"Falha Indefinida: {falha_indefinida}")
+
+async def executar_modo_planilha():
+
+    print("Modo de emissão por planilha selecionado")
+
+    caminho_planilha = input("Informe o caminho da planilha Excel: ").strip()
+
+    registros, erros = ler_planilha_certidoes(caminho_planilha)
+
+    print("\n=== ERROS ENCONTRADOS NA PLANILHA ===")
+
+    if erros:
+        for erro in erros:
+            print(f"Linha {erro['linha']}: {', '.join(erro['erros'])}")
+    else:
+        print('Nenhum erro encontrado.')
+
+    print("\n=== INICIANDO PROCESSAMENTO ===")
+
+    resultados_processados = await processar_registros_planilha(registros)
+
+    exibir_resumo_processamento(resultados_processados)
 
     nome_relatorio = gerar_relatorio_csv(resultados_processados)
     print(f"Relatório CSV gerado com sucesso: {nome_relatorio}")

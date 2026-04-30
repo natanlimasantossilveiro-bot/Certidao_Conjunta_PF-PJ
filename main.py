@@ -91,6 +91,34 @@ async def executar_modo_planilha():
     nome_relatorio = gerar_relatorio_csv(resultados_processados)
     print(f"Relatório CSV gerado com sucesso: {nome_relatorio}")
         
+async def executar_modo_manual():
+    print("Modo de emissão manual selecionado")
+
+    tipo = input("Informe o tipo de certidão (pf/pj): ").strip().lower()
+
+    if tipo not in ["pf", "pj"]:
+        print("Tipo inválido. Escolha 'pf' ou 'pj'")
+        return
+    
+    documento = input("Informe o CPF/CNPJ: ").strip()
+
+    data_nascimento = ""
+
+    if tipo == "pf":
+        data_nascimento = input("Informe a data de nascimento (dd/mm/aaaa): ").strip()
+
+    resultado = await processar_certidao(
+        tipo=tipo,
+        documento=documento,
+        data_nascimento=data_nascimento,
+    )
+
+    print("\n=== RESULTADO DA EMISSÃO MANUAL ===")
+    print(f"Status final: {resultado['status_final']}")
+    print(f"Mensagem final: {resultado['mensagem_final']}")
+    print(f"Sucesso: {'Sim' if resultado['sucesso'] else 'Não'}")
+    print(f"Arquivo encontrado: {'Sim' if resultado['arquivo_encontrado'] else 'Não'}")
+    print(f"Caminho da certidão: {resultado['caminho_certidao'] or 'Não localizada/movida.'}")
 
 async def main():
 
@@ -104,36 +132,7 @@ async def main():
         await executar_modo_planilha()
 
     elif modo == "2":
-
-        print("Modo de emissão manual selecionado")
-        
-        tipo = input("Informe o tipo de certidão (pf/pj): ").strip().lower()
-
-        if tipo not in ["pf", "pj"]:
-            print("Tipo inválido. Escolha 'pf' ou 'pj'.")
-            return
-        
-        documento = input("Informe o CPF/CNPJ: ").strip()
-
-        data_nascimento = ""
-
-        if tipo == "pf":
-
-
-            data_nascimento = input("Informe a data de nascimento (dd/mm/aaaa): ").strip()
-
-        resultado = await processar_certidao(
-            tipo=tipo,
-            documento=documento,
-            data_nascimento=data_nascimento,
-        )
-
-        print("\n=== RESULTADO DA EMISSÃO MANUAL ===")
-        print(f"Status final: {resultado['status_final']}")
-        print(f"Mensagem final: {resultado['mensagem_final']}")
-        print(f"Sucesso: {'Sim' if resultado['sucesso'] else 'Não'}")
-        print(f"Arquivo encontrado: {'Sim' if resultado['arquivo_encontrado'] else 'Não'}")
-        print(f"Caminho da certidão: {resultado['caminho_certidao'] or 'Não localizada/movida.'}")
+        await executar_modo_manual()
 
     else:
         print("Opção inválida. Escolha 1 para planilha ou 2 para manual.")

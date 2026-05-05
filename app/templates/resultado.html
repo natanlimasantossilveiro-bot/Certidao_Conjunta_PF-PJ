@@ -1,12 +1,46 @@
-<h1>Resultado da Emissão</h1>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultado da Emissão</title>
 
-<p>Status: {{ resultado.status_final }}</p>
-<p>Mensagem: {{ resultado.mensagem_final }}</p>
-<p>Sucesso: {{ resultado.sucesso }}</p>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
 
-{% if resultado.caminho_certidao %}
-<p>Arquivo: {{ resultado.caminho_certidao }}</p>
-{% endif %}
+<div class="container">
+    <div class="card">
 
-<br>
-<a href="/">Voltar</a>
+        <h1>Resultado da Emissão</h1>
+
+        {% if resultado.sucesso %}
+            <p><strong>Certidão emitida com sucesso.</strong></p>
+        {% else %}
+            <p><strong>Não foi possível confirmar a emissão.</strong></p>
+        {% endif %}
+
+        <p><strong>Status:</strong> {{ resultado.status_final }}</p>
+        <p><strong>Mensagem:</strong> {{ resultado.mensagem_final }}</p>
+        <p><strong>Arquivo encontrado:</strong> {{ resultado.arquivo_encontrado }}</p>
+
+        {% if resultado.caminho_certidao %}
+            <p><strong>Arquivo:</strong> {{ resultado.caminho_certidao }}</p>
+        {% else %}
+            <p><strong>Arquivo:</strong> Não localizada/movida.</p>
+        {% endif %}
+
+        <div class="actions">
+            <a href="/manual">
+                <button>Nova emissão</button>
+            </a>
+
+            <a href="/">
+                <button>Voltar ao início</button>
+            </a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

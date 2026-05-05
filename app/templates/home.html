@@ -1,26 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Certidão Conjunta PF/PJ</title>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
+
 <body>
 
-    <h1>Sistema de Certidões</h1>
-    <p>Interface web funcionadno com FastAPI.</p>
-    
-    <br>
-    
-    <a href="/manual">
-        <button>Emitir Certidão Manual</button>
-    </a>
+    <div class="container">
+        <div class="card">
+            <h1>Sistema de Certidões</h1>
+            <p>Automação interna para emissão de Certidão Conjunta PF/PJ.</p>
 
-    <br><br>
+            <div class="actions">
+                <a href="/manual">
+                    <button>Emitir Certidão Manual</button>
+                </a>
 
-    <a href="/planilha">
-        <button>Emitir por Planilha</button>
-    </a>
+                <a href="/planilha">
+                    <button>Emitir por Planilha</button>
+                </a>
+            </div>
+        </div>
+    </div>
 
 </body>
+
 </html>

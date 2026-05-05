@@ -1,4 +1,36 @@
-<h1>Emissão por Planilha</h1>
-<p>Aqui ficará o envio da planilha Excel.</p>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Emissão por Planilha</title>
 
-<a href="/">Voltar</a>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <h1>Emissão por Planilha</h1>
+        <p>Envie uma planilha Excel com os dados para emissão em lote.</p>
+
+        <form method="post" action="/processar-planilha" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Arquivo Excel</label>
+                <input type="file" name="planilha" accept=".xlsx">
+            </div>
+
+            <button type="submit">Processar Planilha</button>
+        </form>
+
+        <div class="actions">
+            <a href="/">
+                <button>Voltar ao início</button>
+            </a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

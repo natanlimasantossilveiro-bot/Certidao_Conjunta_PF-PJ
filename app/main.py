@@ -1,9 +1,21 @@
-from fastapi import FastAPI, Request
+import sys
+import asyncio
+import shutil
+import os
+
+from fastapi import FastAPI, Request, Form, UploadFile, File
 from fastapi.templating import Jinja2Templates
-from fastapi import Form
+from fastapi.staticfiles import StaticFiles
+from src.leitor_planilha import ler_planilha_certidoes
+
 from src.emissao_nodriver import processar_certidao
 
+if sys.platform.startswith("win"):
+    asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 templates = Jinja2Templates(directory="app/templates")
 
@@ -39,17 +51,70 @@ async def emitir_manual(
     documento: str = Form(...),
     data_nascimento: str = Form("")
 ):
-    resultado = await processar_certidao(
-        tipo=tipo,
-        documento=documento,
-        data_nascimento=data_nascimento
+    resultado = await asyncio.to_thread(
+        lambda: asyncio.run(processar_certidao(
+            tipo=tipo,
+            documento=documento,
+            data_nascimento=data_nascimento
+        ))
+    )
+
+    return templates.TemplateResponse(
+         request=request,
+         name="resultado.html",
+         context={
+              "request": request,
+              "resultado": resultado
+         }
+    )
+@app.post("/processar-planilha")
+async def processar_planilha(
+    request: Request,
+    planilha: UploadFile = File(...)):
+    os.makedirs("entrada_planilhas", exist_ok=True)
+
+    caminho_arquivo = f"entrada_planilhas/{planilha.filename}"
+
+    with open(caminho_arquivo, "wb") as buffer:
+        shutil.copyfileobj(planilha.file, buffer)
+
+    registros, erros = ler_planilha_certidoes(caminho_arquivo)
+
+    resultados_processados = []
+
+    for registro in registros:
+        resultado = await asyncio.to_thread(
+            lambda registro=registro: asyncio.run(processar_certidao(
+                tipo=registro["tipo"],
+                documento=registro["documento"],
+                data_nascimento=registro["data_nascimento"]
+            ))
+        )
+
+        resultados_processados.append(resultado)
+
+    total_sucessos = sum(
+        1 for resultado in resultados_processados
+        if resultado["sucesso"]
+    )
+
+    total_arquivos_encontrados = sum(
+        1 for resultado in resultados_processados
+        if resultado["arquivo_encontrado"]
     )
 
     return templates.TemplateResponse(
         request=request,
-        name="resultado.html",
+        name="resultado_planilha.html",
         context={
             "request": request,
-            "resultado": resultado
+            "arquivo": caminho_arquivo,
+            "total_registros_validos": len(registros),
+            "total_erros_validacao": len(erros),
+            "total_processados": len(resultados_processados),
+            "total_sucessos": total_sucessos,
+            "total_arquivos_encontrados": total_arquivos_encontrados,
+            "erros": erros,
+            "resultados": resultados_processados
         }
     )

@@ -1,27 +1,86 @@
-<h1>Emissão Manual</h1>
+<!DOCTYPE html>
+<html lang="pt-BR">
 
-<form method="post" action="/emitir-manual">
-    <label for="tipo">Tipo de certidão:</label>
-    <select id="tipo" name="tipo">
-        <option value="pf">Pessoa Física (PF)</option>
-        <option value="pj">Pessoa Jurídica (PJ)</option>
-    </select>
+<head>
+    <meta charset="UTF-8">
+    <title>Emissão Manual</title>
 
-    <br><br>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
 
-    <label for="documento">CPF/CNPJ:</label>
-    <input type="text" id="documento" name="documento">
+<body>
 
-    <br><br>
+    <div class="container">
+        <div class="card">
 
-    <label for="data_nascimento">Data de nascimento:</label>
-    <input type="text" id="data_nascimento" name="data_nascimento" placeholder="dd/mm/aaaa">
+            <h1>Emissão Manual</h1>
+            <p>Preencha os dados para emitir a certidão.</p>
 
-    <br><br>
+            <form method="post" action="/emitir-manual">
 
-    <button type="submit">Emitir Certidão</button>
-</form>
+                <div class="form-group">
+                    <label>Tipo de certidão</label>
+                    <select name="tipo" id="tipo">
+                        <option value="pf">Pessoa Física (PF)</option>
+                        <option value="pj">Pessoa Jurídica (PJ)</option>
+                    </select>
+                </div>
 
-<br>
+                <div class="form-group">
+                    <label id="label_documento">CPF</label>
+                    <input type="text" name="documento">
+                </div>
 
-<a href="/">Voltar</a>
+                <div class="form-group" id="grupo_data_nascimento">
+                    <label>Data de nascimento</label>
+                    <input type="text" name="data_nascimento" id="data_nascimento" placeholder="dd/mm/aaaa"
+                        maxlength="10">
+                </div>
+
+                <br>
+
+                <button type="submit">Emitir Certidão</button>
+
+            </form>
+
+            <br>
+
+            <a href="/">
+                <button>Voltar</button>
+            </a>
+
+        </div>
+    </div>
+    <script>
+        document.getElementById("data_nascimento").addEventListener("input", function (e) {
+            let v = e.target.value.replace(/\D/g, ""); // remove tudo que não é número
+
+            if (v.length > 2) v = v.slice(0, 2) + "/" + v.slice(2);
+            if (v.length > 5) v = v.slice(0, 5) + "/" + v.slice(5, 9);
+
+            e.target.value = v;
+        });
+    </script>
+    <script>
+        const tipo = document.getElementById("tipo");
+        const grupoDataNascimento = document.getElementById("grupo_data_nascimento");
+        const campoDataNascimento = document.getElementById("data_nascimento");
+        const labelDocumento = document.getElementById("label_documento");
+
+        function atualizarCampoDataNascimento() {
+            if (tipo.value === "pj") {
+                grupoDataNascimento.style.display = "none";
+                campoDataNascimento.value = "";
+                labelDocumento.innerText = "CNPJ";
+            } else {
+                grupoDataNascimento.style.display = "block";
+                labelDocumento.innerText = "CPF";
+            }
+        }
+
+        tipo.addEventListener("change", atualizarCampoDataNascimento);
+        atualizarCampoDataNascimento();
+    </script>
+</body>
+
+</html>

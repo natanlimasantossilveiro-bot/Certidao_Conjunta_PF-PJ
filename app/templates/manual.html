@@ -1,0 +1,27 @@
+<h1>Emissão Manual</h1>
+
+<form method="post" action="/emitir-manual">
+    <label for="tipo">Tipo de certidão:</label>
+    <select id="tipo" name="tipo">
+        <option value="pf">Pessoa Física (PF)</option>
+        <option value="pj">Pessoa Jurídica (PJ)</option>
+    </select>
+
+    <br><br>
+
+    <label for="documento">CPF/CNPJ:</label>
+    <input type="text" id="documento" name="documento">
+
+    <br><br>
+
+    <label for="data_nascimento">Data de nascimento:</label>
+    <input type="text" id="data_nascimento" name="data_nascimento" placeholder="dd/mm/aaaa">
+
+    <br><br>
+
+    <button type="submit">Emitir Certidão</button>
+</form>
+
+<br>
+
+<a href="/">Voltar</a>

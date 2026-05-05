@@ -1,0 +1,12 @@
+<h1>Resultado da Emissão</h1>
+
+<p>Status: {{ resultado.status_final }}</p>
+<p>Mensagem: {{ resultado.mensagem_final }}</p>
+<p>Sucesso: {{ resultado.sucesso }}</p>
+
+{% if resultado.caminho_certidao %}
+<p>Arquivo: {{ resultado.caminho_certidao }}</p>
+{% endif %}
+
+<br>
+<a href="/">Voltar</a>

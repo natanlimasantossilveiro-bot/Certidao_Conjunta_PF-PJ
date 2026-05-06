@@ -1,46 +1,59 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <title>Resultado da Emissão</title>
 
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
+
 <body>
 
-<div class="container">
-    <div class="card">
+    <div class="container">
+        <div class="card">
 
-        <h1>Resultado da Emissão</h1>
+            <h1>Resultado da Emissão</h1>
 
-        {% if resultado.sucesso %}
+            {% if resultado.sucesso %}
             <p><strong>Certidão emitida com sucesso.</strong></p>
-        {% else %}
+            {% else %}
             <p><strong>Não foi possível confirmar a emissão.</strong></p>
-        {% endif %}
+            {% endif %}
 
-        <p><strong>Status:</strong> {{ resultado.status_final }}</p>
-        <p><strong>Mensagem:</strong> {{ resultado.mensagem_final }}</p>
-        <p><strong>Arquivo encontrado:</strong> {{ resultado.arquivo_encontrado }}</p>
+            <p><strong>Status:</strong> {{ resultado.status_final }}</p>
+            <p><strong>Mensagem:</strong> {{ resultado.mensagem_final }}</p>
+            <p><strong>Arquivo encontrado:</strong> {{ resultado.arquivo_encontrado }}</p>
 
-        {% if resultado.caminho_certidao %}
+            {% if resultado.caminho_certidao %}
             <p><strong>Arquivo:</strong> {{ resultado.caminho_certidao }}</p>
-        {% else %}
+            {% else %}
             <p><strong>Arquivo:</strong> Não localizada/movida.</p>
-        {% endif %}
+            {% endif %}
 
-        <div class="actions">
-            <a href="/manual">
-                <button>Nova emissão</button>
-            </a>
+            {% if resultado.url_print %}
+            <p><strong>Evidência:</strong> Print capturado automaticamente.</p>
 
-            <a href="/">
-                <button>Voltar ao início</button>
-            </a>
+            <div class="actions">
+                <a href="{{ resultado.url_print }}" target="_blank">
+                    <button type="button">Visualizar evidência</button>
+                </a>
+            </div>
+            {% endif %}
+
+            <div class="actions">
+                <a href="/manual">
+                    <button>Nova emissão</button>
+                </a>
+
+                <a href="/">
+                    <button>Voltar ao início</button>
+                </a>
+            </div>
+
         </div>
-
     </div>
-</div>
 
 </body>
+
 </html>

@@ -3,10 +3,35 @@ import os
 import shutil
 from pathlib import Path
 import time
+from datetime import datetime
 
 def listar_pdfs_downloads():
     downloads = Path.home() / "Downloads"
     return set(downloads.glob("*.pdf"))
+
+async def tirar_print_tela(page, documento, motivo="falha"):
+    try: 
+        pasta_prints = Path("app/static/evidencias")
+        pasta_prints.mkdir(parents=True, exist_ok=True)
+
+        data_hora = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+        nome_arquivo = f"print_{documento}_{motivo}_{data_hora}.png"
+        caminho_print = pasta_prints / nome_arquivo
+
+        await page.save_screenshot(str(caminho_print))
+
+        return {
+            "caminho_print": str(caminho_print),
+            "url_print": f"/static/evidencias/{nome_arquivo}"
+        }
+    except Exception as erro:
+        print(f"Erro ao tirar print da tela: {erro}")
+
+        return {
+            "caminho_print": "",
+            "url_print": ""
+        }
 
 def mover_certidao_para_pasta(nome_arquivo, pdfs_antes):
     downloads = Path.home() / "Downloads"
@@ -374,6 +399,15 @@ async def processar_certidao(tipo, documento, data_nascimento=""):
             resultado_pdf["status"]
         )
 
+        evidencia_print = None
+        
+        if resultado_final["status_final"] in ["erro_receita", "falha_indefinida"]:
+            evidencia_print = await tirar_print_tela(
+                page=page,
+                documento=documento,
+                motivo=resultado_final["status_final"]
+            )
+
         return {
             "linha_processada": True,
             "tipo": tipo,
@@ -392,6 +426,7 @@ async def processar_certidao(tipo, documento, data_nascimento=""):
 
             "arquivo_encontrado": bool(caminho_certidao),
             "caminho_certidao": str(caminho_certidao) if caminho_certidao else "",
+            "url_print": evidencia_print["url_print"] if evidencia_print else "",
         }
 
     finally:

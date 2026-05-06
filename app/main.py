@@ -10,6 +10,9 @@ from src.leitor_planilha import ler_planilha_certidoes
 
 from src.emissao_nodriver import processar_certidao
 
+from fastapi.responses import FileResponse
+from pathlib import Path
+
 if sys.platform.startswith("win"):
     asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
 
@@ -117,4 +120,18 @@ async def processar_planilha(
             "erros": erros,
             "resultados": resultados_processados
         }
+    )
+
+@app.get("/baixar-certidao/{nome_arquivo}")
+def baixar_certidao(nome_arquivo: str):
+    pasta_certidoes = Path("certidoes_emitidas")
+    caminho_arquivo = pasta_certidoes / nome_arquivo
+
+    if not caminho_arquivo.exists():
+        return {"erro": "Arquivo não encontrado"}
+    
+    return FileResponse(
+        path=caminho_arquivo,
+        filename=nome_arquivo,
+        media_type="application/pdf"
     )

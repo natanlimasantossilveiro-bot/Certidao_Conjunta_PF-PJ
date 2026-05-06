@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 
+
+
 <body>
 
     <div class="container">
@@ -16,7 +18,7 @@
             <h1>Emissão Manual</h1>
             <p>Preencha os dados para emitir a certidão.</p>
 
-            <form method="post" action="/emitir-manual">
+            <form method="post" action="/emitir-manual" onsubmit="mostrarLoading()">
 
                 <div class="form-group">
                     <label>Tipo de certidão</label>
@@ -80,6 +82,19 @@
 
         tipo.addEventListener("change", atualizarCampoDataNascimento);
         atualizarCampoDataNascimento();
+    </script>
+    <div id="loading" class="loading-overlay" style="display: none;">
+        <div class="loading-card">
+            <div class="spinner"></div>
+            <h2>Emitindo certidão...</h2>
+            <p>Aguarde alguns instantes enquanto consultamos a Receita Federal.</p>
+        </div>
+    </div>
+
+    <script>
+        function mostrarLoading() {
+            document.getElementById("loading").style.display = "flex";
+        }
     </script>
 </body>
 

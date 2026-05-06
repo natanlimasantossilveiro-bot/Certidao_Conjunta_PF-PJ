@@ -26,7 +26,14 @@
             <p><strong>Arquivo encontrado:</strong> {{ resultado.arquivo_encontrado }}</p>
 
             {% if resultado.caminho_certidao %}
-            <p><strong>Arquivo:</strong> {{ resultado.caminho_certidao }}</p>
+            <p><strong>Arquivo:</strong> Certidão localizada.</p>
+
+            <div class="actions">
+                <a href="/baixar-certidao/{{ resultado.caminho_certidao.replace('\\','/').split('/')[-1] }}"
+                    target="_blank">
+                    <button type="button">Baixar certidão</button>
+                </a>
+            </div>
             {% else %}
             <p><strong>Arquivo:</strong> Não localizada/movida.</p>
             {% endif %}
@@ -35,8 +42,12 @@
             <p><strong>Evidência:</strong> Print capturado automaticamente.</p>
 
             <div class="actions">
+                <a href="{{ resultado.url_print }}" download>
+                    <button type="button">⬇ Baixar evidência</button>
+                </a>
+
                 <a href="{{ resultado.url_print }}" target="_blank">
-                    <button type="button">Visualizar evidência</button>
+                    <button type="button">👁 Visualizar evidência</button>
                 </a>
             </div>
             {% endif %}

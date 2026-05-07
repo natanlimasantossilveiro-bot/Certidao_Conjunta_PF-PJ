@@ -21,7 +21,18 @@
             <p><strong>Não foi possível confirmar a emissão.</strong></p>
             {% endif %}
 
-            <p><strong>Status:</strong> {{ resultado.status_final }}</p>
+            {% if resultado.status_final == "sucesso_confirmado" %}
+            <p class="status-badge status-sucesso">✅ Sucesso confirmado</p>
+
+            {% elif resultado.status_final == "sucesso_provavel" %}
+            <p class="status-badge status-alerta">⚠️ Sucesso provável</p>
+
+            {% elif resultado.status_final == "erro_receita" %}
+            <p class="status-badge status-erro">❌ Erro na Receita Federal</p>
+
+            {% else %}
+            <p class="status-badge status-indefinido">❓ Falha indefinida</p>
+            {% endif %}
             <p><strong>Mensagem:</strong> {{ resultado.mensagem_final }}</p>
             <p><strong>Arquivo encontrado:</strong> {{ resultado.arquivo_encontrado }}</p>
 

@@ -1,36 +1,58 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <title>Emissão por Planilha</title>
 
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
+
 <body>
 
-<div class="container">
-    <div class="card">
+    <div class="container">
+        <div class="card">
 
-        <h1>Emissão por Planilha</h1>
-        <p>Envie uma planilha Excel com os dados para emissão em lote.</p>
+            <h1>Emissão por Planilha</h1>
+            <p>Envie uma planilha Excel com os dados para emissão em lote.</p>
 
-        <form method="post" action="/processar-planilha" enctype="multipart/form-data">
-            <div class="form-group">
-                <label>Arquivo Excel</label>
-                <input type="file" name="planilha" accept=".xlsx">
+            <form method="post" action="/processar-planilha" enctype="multipart/form-data"
+                onsubmit="mostrarLoadingPlanilha()">
+                <div class="form-group">
+                    <label>Arquivo Excel</label>
+                    <input type="file" name="planilha" accept=".xlsx">
+                </div>
+
+                <button type="submit">Processar Planilha</button>
+            </form>
+
+            <div class="actions">
+                <a href="/">
+                    <button>Voltar ao início</button>
+                </a>
             </div>
 
-            <button type="submit">Processar Planilha</button>
-        </form>
-
-        <div class="actions">
-            <a href="/">
-                <button>Voltar ao início</button>
-            </a>
         </div>
-
     </div>
-</div>
+
+    <div id="loading-planilha" class="loading-overlay" style="display: none;">
+        <div class="loading-card">
+            <div class="spinner"></div>
+
+            <h2>Processando planilha...</h2>
+
+            <p>
+                Aguarde enquanto as certidões estão sendo emitidas.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function mostrarLoadingPlanilha() {
+            document.getElementById("loading-planilha").style.display = "flex";
+        }
+    </script>
 
 </body>
+
 </html>

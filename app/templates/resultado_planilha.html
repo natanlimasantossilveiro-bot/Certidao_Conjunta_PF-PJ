@@ -89,6 +89,12 @@
                     <button>Processar nova planilha</button>
                 </a>
 
+                {% if caminho_relatorio %}
+                <a href="/baixar-relatorio/{{ caminho_relatorio.replace('\\','/').split('/')[-1] }}">
+                    <button>Baixar relatório CSV</button>
+                </a>
+                {% endif %}
+
                 <a href="/">
                     <button>Voltar ao início</button>
                 </a>

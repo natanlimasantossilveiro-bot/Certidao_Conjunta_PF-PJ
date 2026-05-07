@@ -1,0 +1,211 @@
+[
+    {
+        "data_hora": "07/05/2026 15:19:48",
+        "tipo": "pf",
+        "documento": "08131529924",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-08131529924.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "07/05/2026 16:26:47",
+        "tipo": "pf",
+        "documento": "08131529924",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-08131529924.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "07/05/2026 16:27:35",
+        "tipo": "pf",
+        "documento": "08124091919",
+        "status_final": "sucesso_provavel",
+        "mensagem_final": "A emissão não foi identificada claramente por texto, mas o fluxo avançou normalmente.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-08124091919.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "07/05/2026 16:30:29",
+        "tipo": "pf",
+        "documento": "08124091919",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-08124091919.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "07/05/2026 16:31:36",
+        "tipo": "pf",
+        "documento": "08124091919",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-08124091919.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "07/05/2026 16:51:09",
+        "tipo": "pf",
+        "documento": "08131529924",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-08131529924.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "07/05/2026 17:46:42",
+        "tipo": "pf",
+        "documento": "08131529924",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-08131529924.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "07/05/2026 17:48:34",
+        "tipo": "pf",
+        "documento": "08131529924",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-08131529924.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "07/05/2026 17:50:19",
+        "tipo": "pf",
+        "documento": "08131529924",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-08131529924.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "07/05/2026 17:50:41",
+        "tipo": "pf",
+        "documento": "02989916911",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-02989916911.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "07/05/2026 17:51:09",
+        "tipo": "pj",
+        "documento": "47861417000293",
+        "status_final": "falha_indefinida",
+        "mensagem_final": "Não foi possível confirmar com segurança o resultado final da emissão.",
+        "sucesso": false,
+        "arquivo_encontrado": false,
+        "caminho_certidao": "",
+        "url_print": "/static/evidencias/print_47861417000293_falha_indefinida_20260507_175107.png"
+    },
+    {
+        "data_hora": "07/05/2026 17:52:53",
+        "tipo": "pf",
+        "documento": "08131529924",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-08131529924.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "07/05/2026 17:53:10",
+        "tipo": "pf",
+        "documento": "02989916911",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-02989916911.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "07/05/2026 17:53:37",
+        "tipo": "pj",
+        "documento": "47861417000293",
+        "status_final": "falha_indefinida",
+        "mensagem_final": "Não foi possível confirmar com segurança o resultado final da emissão.",
+        "sucesso": false,
+        "arquivo_encontrado": false,
+        "caminho_certidao": "",
+        "url_print": "/static/evidencias/print_47861417000293_falha_indefinida_20260507_175336.png"
+    },
+    {
+        "data_hora": "07/05/2026 18:10:43",
+        "tipo": "pf",
+        "documento": "08131529924",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-08131529924.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "07/05/2026 18:11:19",
+        "tipo": "pj",
+        "documento": "13316414000176",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-13316414000176.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "07/05/2026 18:11:56",
+        "tipo": "pf",
+        "documento": "08131529924",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-08131529924.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "07/05/2026 18:12:13",
+        "tipo": "pf",
+        "documento": "02989916911",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-02989916911.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "07/05/2026 18:12:41",
+        "tipo": "pj",
+        "documento": "47861417000293",
+        "status_final": "falha_indefinida",
+        "mensagem_final": "Não foi possível confirmar com segurança o resultado final da emissão.",
+        "sucesso": false,
+        "arquivo_encontrado": false,
+        "caminho_certidao": "",
+        "url_print": "/static/evidencias/print_47861417000293_falha_indefinida_20260507_181240.png"
+    }
+]

@@ -244,3 +244,19 @@ h2 {
         font-size: 14px;
     }
 }
+.empty-state {
+    background: #f8f8f8;
+    border: 1px dashed #c8c8c8;
+    border-radius: 12px;
+    padding: 32px 20px;
+    margin-top: 24px;
+    text-align: center;
+}
+
+.empty-state h2 {
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    margin-bottom: 20px;
+}

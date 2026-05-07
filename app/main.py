@@ -12,6 +12,8 @@ from src.emissao_nodriver import processar_certidao
 
 from fastapi.responses import FileResponse
 from pathlib import Path
+from src.historico import salvar_no_historico, carregar_historico
+from src.relatorio import gerar_relatorio_csv
 
 if sys.platform.startswith("win"):
     asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
@@ -47,6 +49,21 @@ def planilha(request: Request):
         context={"request": request}
     )
 
+@app.get("/historico")
+def historico(request: Request):
+    registros = carregar_historico()
+
+    registros.reverse()
+
+    return templates.TemplateResponse(
+        request=request,
+        name="historico.html",
+        context={
+            "request": request,
+            "registros": registros
+        }
+    )
+
 @app.post("/emitir-manual")
 async def emitir_manual(
     request: Request,
@@ -61,6 +78,8 @@ async def emitir_manual(
             data_nascimento=data_nascimento
         ))
     )
+
+    salvar_no_historico(resultado)
 
     return templates.TemplateResponse(
          request=request,
@@ -96,6 +115,8 @@ async def processar_planilha(
 
         resultados_processados.append(resultado)
 
+        salvar_no_historico(resultado)
+
     total_sucessos = sum(
         1 for resultado in resultados_processados
         if resultado["sucesso"]
@@ -105,6 +126,8 @@ async def processar_planilha(
         1 for resultado in resultados_processados
         if resultado["arquivo_encontrado"]
     )
+
+    caminho_relatorio = gerar_relatorio_csv(resultados_processados)
 
     return templates.TemplateResponse(
         request=request,
@@ -118,20 +141,48 @@ async def processar_planilha(
             "total_sucessos": total_sucessos,
             "total_arquivos_encontrados": total_arquivos_encontrados,
             "erros": erros,
-            "resultados": resultados_processados
+            "resultados": resultados_processados,
+            "caminho_relatorio": caminho_relatorio
         }
     )
 
 @app.get("/baixar-certidao/{nome_arquivo}")
-def baixar_certidao(nome_arquivo: str):
+def baixar_certidao(request: Request, nome_arquivo: str):
     pasta_certidoes = Path("certidoes_emitidas")
     caminho_arquivo = pasta_certidoes / nome_arquivo
 
     if not caminho_arquivo.exists():
-        return {"erro": "Arquivo não encontrado"}
+        return templates.TemplateResponse(
+            request=request,
+            name="erro.html",
+            context={
+                "request": request,
+                "mensagem": "A certidão solicitada não foi encontrada. Ela pode ter sido removida ou ainda não ter sido baixada."
+            }
+        )
     
     return FileResponse(
         path=caminho_arquivo,
         filename=nome_arquivo,
         media_type="application/pdf"
+    )
+@app.get("/baixar-relatorio/{nome_arquivo}")
+def baixar_relatorio(request: Request, nome_arquivo: str):
+    pasta_relatorios = Path("relatorios")
+    caminho_arquivo = pasta_relatorios / nome_arquivo
+
+    if not caminho_arquivo.exists():
+        return templates.TemplateResponse(
+            request=request,
+            name="erro.html",
+            context={
+                "request": request,
+                "mensagem": "O relatório solicitado não foi encontrado. Ele pode ter sido removido ou não ter sido gerado corretamente."
+            }
+        )
+    
+    return FileResponse(
+        path=caminho_arquivo,
+        filename=nome_arquivo,
+        media_type="text/csv"
     )

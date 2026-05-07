@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Histórico de Emissões</title>
+
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="card">
+
+            <h1>Histórico de Emissões</h1>
+            <p>Consulte as certidões emitidas e evidências registradas.</p>
+
+            {% if registros %}
+
+            {% for registro in registros %}
+            <div class="resultado-item">
+                <p><strong>Data/Hora:</strong> {{ registro.data_hora }}</p>
+                <p><strong>Tipo:</strong> {{ registro.tipo|upper }}</p>
+                <p><strong>Documento:</strong> {{ registro.documento }}</p>
+
+                {% if registro.status_final == "sucesso_confirmado" %}
+                <p class="status-badge status-sucesso">✅ Sucesso confirmado</p>
+
+                {% elif registro.status_final == "sucesso_provavel" %}
+                <p class="status-badge status-alerta">⚠️ Sucesso provável</p>
+
+                {% elif registro.status_final == "erro_receita" %}
+                <p class="status-badge status-erro">❌ Erro na Receita Federal</p>
+
+                {% else %}
+                <p class="status-badge status-indefinido">❓ Falha indefinida</p>
+                {% endif %}
+
+                <p><strong>Mensagem:</strong> {{ registro.mensagem_final }}</p>
+
+                {% if registro.caminho_certidao %}
+                <p><strong>Arquivo:</strong> Certidão localizada.</p>
+
+                <div class="actions">
+                    <a href="/baixar-certidao/{{ registro.caminho_certidao.replace('\\','/').split('/')[-1] }}"
+                        target="_blank">
+                        <button type="button">Baixar certidão</button>
+                    </a>
+                </div>
+                {% else %}
+                <p><strong>Arquivo:</strong> Não localizada/movida.</p>
+                {% endif %}
+
+                {% if registro.url_print %}
+                <p><strong>Evidência:</strong> Print capturado automaticamente.</p>
+
+                <div class="actions">
+                    <a href="{{ registro.url_print }}" download>
+                        <button type="button">⬇ Baixar evidência</button>
+                    </a>
+
+                    <a href="{{ registro.url_print }}" target="_blank">
+                        <button type="button">👁 Visualizar evidência</button>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            {% else %}
+            <div class="empty-state">
+                <h2>Nenhuma emissão registrada</h2>
+                <p>Assim que você emitir uma certidão, ela aparecerá aqui no histórico.</p>
+
+                <div class="actions">
+                    <a href="/manual">
+                        <button>Emitir certidão manual</button>
+                    </a>
+
+                    <a href="/planilha">
+                        <button>Emitir por planilha</button>
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="actions">
+                <a href="/">
+                    <button>Voltar ao início</button>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

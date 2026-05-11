@@ -8,27 +8,67 @@
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 
-<body>
+<body class="internal-page">
 
-    <div class="container">
-        <div class="card">
+    <header class="topbar">
+        <div class="brand">Certidão — Conjunta</div>
+
+        <nav>
+            <a href="/">Início</a>
+            <a href="/manual">Manual</a>
+            <a href="/planilha">Planilha</a>
+            <a href="/historico">Histórico</a>
+        </nav>
+    </header>
+
+    <main class="internal-shell">
+
+        <section class="internal-hero error-green-section">
 
             <h1>Algo não saiu como esperado</h1>
 
-            <p>{{ mensagem }}</p>
+            <p>
+                O sistema encontrou uma inconsistência durante o processamento.
+                Revise as informações ou tente novamente em alguns instantes.
+            </p>
 
-            <div class="actions">
-                <a href="/">
-                    <button>Voltar ao início</button>
-                </a>
+        </section>
 
-                <a href="/historico">
-                    <button>Ver histórico</button>
-                </a>
+        <section class="error-content-section">
+
+            <div class="error-card">
+
+                <div class="error-icon">
+                    ⚠
+                </div>
+
+                <h2>Mensagem do sistema</h2>
+
+                <p class="error-message">
+                    {{ mensagem }}
+                </p>
+
+                <div class="actions">
+
+                    <a href="/">
+                        <button>
+                            Voltar ao início
+                        </button>
+                    </a>
+
+                    <a href="/historico">
+                        <button>
+                            Ver histórico
+                        </button>
+                    </a>
+
+                </div>
+
             </div>
 
-        </div>
-    </div>
+        </section>
+
+    </main>
 
 </body>
 

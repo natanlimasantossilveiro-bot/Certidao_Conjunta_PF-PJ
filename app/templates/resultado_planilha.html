@@ -4,104 +4,145 @@
 <head>
     <meta charset="UTF-8">
     <title>Resultado da Planilha</title>
-
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 
-<body>
+<body class="internal-page">
 
-    <div class="container">
-        <div class="card">
+    <header class="topbar">
+        <div class="brand">Certidão — Conjunta</div>
 
+        <nav>
+            <a href="/">Início</a>
+            <a href="/manual">Manual</a>
+            <a href="/planilha">Planilha</a>
+            <a href="/historico">Histórico</a>
+        </nav>
+    </header>
+
+    <main class="internal-shell">
+
+        <section class="internal-hero green-section">
             <h1>Resultado da Planilha</h1>
-            <p>Resumo do processamento em lote.</p>
+            <p>
+                Consulte o resumo do processamento em lote,
+                os resultados individuais e o relatório gerado.
+            </p>
+        </section>
 
-            <p><strong>Total de registros válidos:</strong> {{ total_registros_validos }}</p>
-            <p><strong>Total processados:</strong> {{ total_processados }}</p>
-            <p><strong>Total de sucessos:</strong> {{ total_sucessos }}</p>
-            <p><strong>Arquivos encontrados:</strong> {{ total_arquivos_encontrados }}</p>
-            <p><strong>Erros de validação:</strong> {{ total_erros_validacao }}</p>
+        <section class="result-section light-green-section">
+            <div class="result-card">
 
-            <hr><br>
+                <h2>Resumo do processamento</h2>
 
-            <h2>Resultados</h2>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span>Registros válidos</span>
+                        <strong>{{ total_registros_validos }}</strong>
+                    </div>
 
-            {% for resultado in resultados %}
-            <div class="resultado-item">
-                <p><strong>Documento:</strong> {{ resultado.documento }}</p>
-                {% if resultado.status_final == "sucesso_confirmado" %}
-                <p class="status-badge status-sucesso">✅ Sucesso confirmado</p>
+                    <div class="summary-item">
+                        <span>Processados</span>
+                        <strong>{{ total_processados }}</strong>
+                    </div>
 
-                {% elif resultado.status_final == "sucesso_provavel" %}
-                <p class="status-badge status-alerta">⚠️ Sucesso provável</p>
+                    <div class="summary-item">
+                        <span>Sucessos</span>
+                        <strong>{{ total_sucessos }}</strong>
+                    </div>
 
-                {% elif resultado.status_final == "erro_receita" %}
-                <p class="status-badge status-erro">❌ Erro na Receita Federal</p>
+                    <div class="summary-item">
+                        <span>Arquivos encontrados</span>
+                        <strong>{{ total_arquivos_encontrados }}</strong>
+                    </div>
 
-                {% else %}
-                <p class="status-badge status-indefinido">❓ Falha indefinida</p>
+                    <div class="summary-item">
+                        <span>Erros de validação</span>
+                        <strong>{{ total_erros_validacao }}</strong>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h2>Resultados individuais</h2>
+
+                {% for resultado in resultados %}
+                    <article class="result-info">
+                        <p><strong>Documento:</strong> {{ resultado.documento }}</p>
+
+                        {% if resultado.status_final == "sucesso_confirmado" %}
+                            <p class="status-badge status-sucesso">✅ Sucesso confirmado</p>
+                        {% elif resultado.status_final == "sucesso_provavel" %}
+                            <p class="status-badge status-alerta">⚠️ Sucesso provável</p>
+                        {% elif resultado.status_final == "erro_receita" %}
+                            <p class="status-badge status-erro">❌ Erro na Receita Federal</p>
+                        {% else %}
+                            <p class="status-badge status-indefinido">❓ Falha indefinida</p>
+                        {% endif %}
+
+                        <p><strong>Mensagem:</strong> {{ resultado.mensagem_final }}</p>
+
+                        {% if resultado.caminho_certidao %}
+                            <p><strong>Arquivo:</strong> Certidão localizada.</p>
+
+                            <div class="actions">
+                                <a href="/baixar-certidao/{{ resultado.caminho_certidao.replace('\\','/').split('/')[-1] }}" target="_blank">
+                                    <button type="button">Baixar certidão</button>
+                                </a>
+                            </div>
+                        {% else %}
+                            <p><strong>Arquivo:</strong> Não localizada/movida.</p>
+                        {% endif %}
+
+                        {% if resultado.url_print %}
+                            <p><strong>Evidência:</strong> Print capturado automaticamente.</p>
+
+                            <div class="actions">
+                                <a href="{{ resultado.url_print }}" download>
+                                    <button type="button">Baixar evidência</button>
+                                </a>
+
+                                <a href="{{ resultado.url_print }}" target="_blank">
+                                    <button type="button">Visualizar evidência</button>
+                                </a>
+                            </div>
+                        {% endif %}
+                    </article>
+                {% endfor %}
+
+                {% if erros %}
+                    <hr>
+
+                    <h2>Erros de validação</h2>
+
+                    {% for erro in erros %}
+                        <article class="result-info">
+                            <p><strong>Linha:</strong> {{ erro.linha }}</p>
+                            <p><strong>Erros:</strong> {{ erro.erros }}</p>
+                        </article>
+                    {% endfor %}
                 {% endif %}
-                <p><strong>Mensagem:</strong> {{ resultado.mensagem_final }}</p>
-
-                {% if resultado.caminho_certidao %}
-                <p><strong>Arquivo:</strong> Certidão localizada.</p>
 
                 <div class="actions">
-                    <a href="/baixar-certidao/{{ resultado.caminho_certidao.replace('\\','/').split('/')[-1] }}"
-                        target="_blank">
-                        <button type="button">Baixar certidão</button>
+                    <a href="/planilha">
+                        <button>Processar nova planilha</button>
+                    </a>
+
+                    {% if caminho_relatorio %}
+                        <a href="/baixar-relatorio/{{ caminho_relatorio.replace('\\','/').split('/')[-1] }}">
+                            <button>Baixar relatório CSV</button>
+                        </a>
+                    {% endif %}
+
+                    <a href="/">
+                        <button>Voltar ao início</button>
                     </a>
                 </div>
-                {% else %}
-                <p><strong>Arquivo:</strong> Não localizada/movida.</p>
-                {% endif %}
 
-                {% if resultado.url_print %}
-                <p><strong>Evidência:</strong> Print capturado automaticamente.</p>
-
-                <div class="actions">
-                    <a href="{{ resultado.url_print }}" download>
-                        <button type="button">⬇ Baixar evidência</button>
-                    </a>
-
-                    <a href="{{ resultado.url_print }}" target="_blank">
-                        <button type="button">👁 Visualizar evidência</button>
-                    </a>
-                </div>
-                {% endif %}
             </div>
-            {% endfor %}
+        </section>
 
-            {% if erros %}
-            <hr><br>
-            <h2>Erros de validação</h2>
-
-            {% for erro in erros %}
-            <div class="resultado-item">
-                <p><strong>Linha:</strong> {{ erro.linha }}</p>
-                <p><strong>Erros:</strong> {{ erro.erros }}</p>
-            </div>
-            {% endfor %}
-            {% endif %}
-
-            <div class="actions">
-                <a href="/planilha">
-                    <button>Processar nova planilha</button>
-                </a>
-
-                {% if caminho_relatorio %}
-                <a href="/baixar-relatorio/{{ caminho_relatorio.replace('\\','/').split('/')[-1] }}">
-                    <button>Baixar relatório CSV</button>
-                </a>
-                {% endif %}
-
-                <a href="/">
-                    <button>Voltar ao início</button>
-                </a>
-            </div>
-
-        </div>
-    </div>
+    </main>
 
 </body>
 

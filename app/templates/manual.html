@@ -1,69 +1,91 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <title>Emissão Manual</title>
-
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 
+<body class="internal-page">
 
+    <header class="topbar">
+        <div class="brand">Certidão — Conjunta</div>
 
-<body>
+        <nav>
+            <a href="/">Início</a>
+            <a href="/manual">Manual</a>
+            <a href="/planilha">Planilha</a>
+            <a href="/historico">Histórico</a>
+        </nav>
+    </header>
 
-    <div class="container">
-        <div class="card">
-
+    <main class="internal-shell">
+        <section class="internal-hero green-section">
             <h1>Emissão Manual</h1>
-            <p>Preencha os dados para emitir a certidão.</p>
+            <p>
+                Emita uma certidão individual informando os dados de pessoa física
+                ou pessoa jurídica.
+            </p>
+        </section>
 
-            <form method="post" action="/emitir-manual" onsubmit="mostrarLoading()">
+        <section class="form-section pink-section">
+            <div class="form-card">
+                <form method="post" action="/emitir-manual" onsubmit="mostrarLoading()">
 
-                <div class="form-group">
-                    <label>Tipo de certidão</label>
-                    <select name="tipo" id="tipo">
-                        <option value="pf">Pessoa Física (PF)</option>
-                        <option value="pj">Pessoa Jurídica (PJ)</option>
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label for="tipo">Tipo de certidão</label>
+                        <select name="tipo" id="tipo" required>
+                            <option value="pf">Pessoa Física (PF)</option>
+                            <option value="pj">Pessoa Jurídica (PJ)</option>
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label id="label_documento">CPF</label>
-                    <input type="text" name="documento">
-                </div>
+                    <div class="form-group">
+                        <label id="label_documento" for="documento">CPF</label>
+                        <input type="text" name="documento" id="documento" placeholder="Digite apenas números" required>
+                    </div>
 
-                <div class="form-group" id="grupo_data_nascimento">
-                    <label>Data de nascimento</label>
-                    <input type="text" name="data_nascimento" id="data_nascimento" placeholder="dd/mm/aaaa"
-                        maxlength="10">
-                </div>
+                    <div class="form-group" id="grupo_data_nascimento">
+                        <label for="data_nascimento">Data de nascimento</label>
+                        <input
+                            type="text"
+                            name="data_nascimento"
+                            id="data_nascimento"
+                            placeholder="dd/mm/aaaa"
+                            maxlength="10"
+                        >
+                    </div>
 
-                <br>
+                    <div class="actions">
+                        <button type="submit">Emitir certidão</button>
 
-                <button type="submit">Emitir Certidão</button>
+                        <a href="/">
+                            <button type="button">Voltar</button>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
 
-            </form>
-
-            <br>
-
-            <a href="/">
-                <button>Voltar</button>
-            </a>
-
+    <div id="loading" class="loading-overlay" style="display: none;">
+        <div class="loading-card">
+            <div class="spinner"></div>
+            <h2>Emitindo certidão...</h2>
+            <p>Aguarde alguns instantes enquanto consultamos a Receita Federal.</p>
         </div>
     </div>
+
     <script>
         document.getElementById("data_nascimento").addEventListener("input", function (e) {
-            let v = e.target.value.replace(/\D/g, ""); // remove tudo que não é número
+            let v = e.target.value.replace(/\D/g, "");
 
             if (v.length > 2) v = v.slice(0, 2) + "/" + v.slice(2);
             if (v.length > 5) v = v.slice(0, 5) + "/" + v.slice(5, 9);
 
             e.target.value = v;
         });
-    </script>
-    <script>
+
         const tipo = document.getElementById("tipo");
         const grupoDataNascimento = document.getElementById("grupo_data_nascimento");
         const campoDataNascimento = document.getElementById("data_nascimento");
@@ -82,20 +104,11 @@
 
         tipo.addEventListener("change", atualizarCampoDataNascimento);
         atualizarCampoDataNascimento();
-    </script>
-    <div id="loading" class="loading-overlay" style="display: none;">
-        <div class="loading-card">
-            <div class="spinner"></div>
-            <h2>Emitindo certidão...</h2>
-            <p>Aguarde alguns instantes enquanto consultamos a Receita Federal.</p>
-        </div>
-    </div>
 
-    <script>
         function mostrarLoading() {
             document.getElementById("loading").style.display = "flex";
         }
     </script>
-</body>
 
+</body>
 </html>

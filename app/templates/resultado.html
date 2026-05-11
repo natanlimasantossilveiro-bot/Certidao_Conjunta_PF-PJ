@@ -4,76 +4,97 @@
 <head>
     <meta charset="UTF-8">
     <title>Resultado da Emissão</title>
-
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 
-<body>
+<body class="internal-page">
 
-    <div class="container">
-        <div class="card">
+    <header class="topbar">
+        <div class="brand">Certidão — Conjunta</div>
 
+        <nav>
+            <a href="/">Início</a>
+            <a href="/manual">Manual</a>
+            <a href="/planilha">Planilha</a>
+            <a href="/historico">Histórico</a>
+        </nav>
+    </header>
+
+    <main class="internal-shell">
+
+        <section class="internal-hero green-section">
             <h1>Resultado da Emissão</h1>
+            <p>
+                Confira o status da emissão manual, o arquivo da certidão
+                e as evidências capturadas durante o processo.
+            </p>
+        </section>
 
-            {% if resultado.sucesso %}
-            <p><strong>Certidão emitida com sucesso.</strong></p>
-            {% else %}
-            <p><strong>Não foi possível confirmar a emissão.</strong></p>
-            {% endif %}
+        <section class="result-section pink-section">
+            <div class="result-card">
 
-            {% if resultado.status_final == "sucesso_confirmado" %}
-            <p class="status-badge status-sucesso">✅ Sucesso confirmado</p>
+                {% if resultado.sucesso %}
+                    <h2>Certidão emitida com sucesso</h2>
+                    <p>O processo foi concluído e a certidão foi localizada.</p>
+                {% else %}
+                    <h2>Não foi possível confirmar a emissão</h2>
+                    <p>O sistema não conseguiu validar totalmente o resultado da consulta.</p>
+                {% endif %}
 
-            {% elif resultado.status_final == "sucesso_provavel" %}
-            <p class="status-badge status-alerta">⚠️ Sucesso provável</p>
+                {% if resultado.status_final == "sucesso_confirmado" %}
+                    <p class="status-badge status-sucesso">✅ Sucesso confirmado</p>
+                {% elif resultado.status_final == "sucesso_provavel" %}
+                    <p class="status-badge status-alerta">⚠️ Sucesso provável</p>
+                {% elif resultado.status_final == "erro_receita" %}
+                    <p class="status-badge status-erro">❌ Erro na Receita Federal</p>
+                {% else %}
+                    <p class="status-badge status-indefinido">❓ Falha indefinida</p>
+                {% endif %}
 
-            {% elif resultado.status_final == "erro_receita" %}
-            <p class="status-badge status-erro">❌ Erro na Receita Federal</p>
+                <div class="result-info">
+                    <p><strong>Mensagem:</strong> {{ resultado.mensagem_final }}</p>
 
-            {% else %}
-            <p class="status-badge status-indefinido">❓ Falha indefinida</p>
-            {% endif %}
-            <p><strong>Mensagem:</strong> {{ resultado.mensagem_final }}</p>
+                    {% if resultado.caminho_certidao %}
+                        <p><strong>Arquivo:</strong> Certidão localizada.</p>
 
-            {% if resultado.caminho_certidao %}
-            <p><strong>Arquivo:</strong> Certidão localizada.</p>
+                        <div class="actions">
+                            <a href="/baixar-certidao/{{ resultado.caminho_certidao.replace('\\','/').split('/')[-1] }}" target="_blank">
+                                <button type="button">Baixar certidão</button>
+                            </a>
+                        </div>
+                    {% else %}
+                        <p><strong>Arquivo:</strong> Não localizada/movida.</p>
+                    {% endif %}
 
-            <div class="actions">
-                <a href="/baixar-certidao/{{ resultado.caminho_certidao.replace('\\','/').split('/')[-1] }}"
-                    target="_blank">
-                    <button type="button">Baixar certidão</button>
-                </a>
+                    {% if resultado.url_print %}
+                        <p><strong>Evidência:</strong> Print capturado automaticamente.</p>
+
+                        <div class="actions">
+                            <a href="{{ resultado.url_print }}" download>
+                                <button type="button">Baixar evidência</button>
+                            </a>
+
+                            <a href="{{ resultado.url_print }}" target="_blank">
+                                <button type="button">Visualizar evidência</button>
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="actions">
+                    <a href="/manual">
+                        <button>Nova emissão</button>
+                    </a>
+
+                    <a href="/">
+                        <button>Voltar ao início</button>
+                    </a>
+                </div>
+
             </div>
-            {% else %}
-            <p><strong>Arquivo:</strong> Não localizada/movida.</p>
-            {% endif %}
+        </section>
 
-            {% if resultado.url_print %}
-            <p><strong>Evidência:</strong> Print capturado automaticamente.</p>
-
-            <div class="actions">
-                <a href="{{ resultado.url_print }}" download>
-                    <button type="button">⬇ Baixar evidência</button>
-                </a>
-
-                <a href="{{ resultado.url_print }}" target="_blank">
-                    <button type="button">👁 Visualizar evidência</button>
-                </a>
-            </div>
-            {% endif %}
-
-            <div class="actions">
-                <a href="/manual">
-                    <button>Nova emissão</button>
-                </a>
-
-                <a href="/">
-                    <button>Voltar ao início</button>
-                </a>
-            </div>
-
-        </div>
-    </div>
+    </main>
 
 </body>
 

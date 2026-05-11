@@ -1,58 +1,104 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
-    <title>Emissão por Planilha</title>
-
+    <title>Processamento por Planilha</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 
-<body>
+<body class="internal-page">
 
-    <div class="container">
-        <div class="card">
+    <header class="topbar">
+        <div class="brand">Certidão — Conjunta</div>
 
-            <h1>Emissão por Planilha</h1>
-            <p>Envie uma planilha Excel com os dados para emissão em lote.</p>
+        <nav>
+            <a href="/">Início</a>
+            <a href="/manual">Manual</a>
+            <a href="/planilha">Planilha</a>
+            <a href="/historico">Histórico</a>
+        </nav>
+    </header>
 
-            <form method="post" action="/processar-planilha" enctype="multipart/form-data"
-                onsubmit="mostrarLoadingPlanilha()">
-                <div class="form-group">
-                    <label>Arquivo Excel</label>
-                    <input type="file" name="planilha" accept=".xlsx">
-                </div>
+    <main class="internal-shell">
 
-                <button type="submit">Processar Planilha</button>
-            </form>
+        <section class="internal-hero green-section">
+            <h1>Processamento por Planilha</h1>
 
-            <div class="actions">
-                <a href="/">
-                    <button>Voltar ao início</button>
-                </a>
+            <p>
+                Realize emissões em lote utilizando uma planilha Excel
+                contendo os dados dos contribuintes.
+            </p>
+        </section>
+
+        <section class="form-section light-green-section">
+
+            <div class="form-card">
+
+                <form
+                    method="post"
+                    action="/processar-planilha"
+                    enctype="multipart/form-data"
+                    onsubmit="mostrarLoading()"
+                >
+
+                    <div class="form-group">
+
+                        <label for="planilha">
+                            Selecione a planilha Excel
+                        </label>
+
+                        <input
+                            type="file"
+                            name="planilha"
+                            id="planilha"
+                            accept=".xlsx"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="actions">
+
+                        <button type="submit">
+                            Processar planilha
+                        </button>
+
+                        <a href="/">
+                            <button type="button">
+                                Voltar
+                            </button>
+                        </a>
+
+                    </div>
+
+                </form>
+
             </div>
 
-        </div>
-    </div>
+        </section>
 
-    <div id="loading-planilha" class="loading-overlay" style="display: none;">
+    </main>
+
+    <div id="loading" class="loading-overlay" style="display: none;">
         <div class="loading-card">
+
             <div class="spinner"></div>
 
             <h2>Processando planilha...</h2>
 
             <p>
-                Aguarde enquanto as certidões estão sendo emitidas.
+                Aguarde enquanto os registros são processados
+                e as certidões são emitidas.
             </p>
+
         </div>
     </div>
 
     <script>
-        function mostrarLoadingPlanilha() {
-            document.getElementById("loading-planilha").style.display = "flex";
+        function mostrarLoading() {
+            document.getElementById("loading").style.display = "flex";
         }
     </script>
 
 </body>
-
 </html>

@@ -284,5 +284,60 @@
         "arquivo_encontrado": false,
         "caminho_certidao": "",
         "url_print": "/static/evidencias/print_47861417000293_falha_indefinida_20260508_093738.png"
+    },
+    {
+        "data_hora": "11/05/2026 10:36:50",
+        "tipo": "pf",
+        "documento": "08131529924",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-08131529924.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "11/05/2026 10:40:19",
+        "tipo": "pf",
+        "documento": "08131529924",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-08131529924.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "11/05/2026 10:40:42",
+        "tipo": "pf",
+        "documento": "02989916911",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-02989916911.pdf",
+        "url_print": ""
+    },
+    {
+        "data_hora": "11/05/2026 10:41:09",
+        "tipo": "pj",
+        "documento": "47861417000293",
+        "status_final": "falha_indefinida",
+        "mensagem_final": "Não foi possível confirmar com segurança o resultado final da emissão.",
+        "sucesso": false,
+        "arquivo_encontrado": false,
+        "caminho_certidao": "",
+        "url_print": "/static/evidencias/print_47861417000293_falha_indefinida_20260511_104108.png"
+    },
+    {
+        "data_hora": "11/05/2026 10:44:05",
+        "tipo": "pf",
+        "documento": "08131529923",
+        "status_final": "falha_indefinida",
+        "mensagem_final": "Não foi possível confirmar com segurança o resultado final da emissão.",
+        "sucesso": false,
+        "arquivo_encontrado": false,
+        "caminho_certidao": "",
+        "url_print": "/static/evidencias/print_08131529923_falha_indefinida_20260511_104404.png"
     }
 ]

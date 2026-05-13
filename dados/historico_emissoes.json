@@ -339,5 +339,16 @@
         "arquivo_encontrado": false,
         "caminho_certidao": "",
         "url_print": "/static/evidencias/print_08131529923_falha_indefinida_20260511_104404.png"
+    },
+    {
+        "data_hora": "13/05/2026 10:45:56",
+        "tipo": "pf",
+        "documento": "08131529924",
+        "status_final": "sucesso_confirmado",
+        "mensagem_final": "A emissão foi concluída com forte indicação de sucesso.",
+        "sucesso": true,
+        "arquivo_encontrado": true,
+        "caminho_certidao": "certidoes_emitidas\\Certidao-08131529924.pdf",
+        "url_print": ""
     }
 ]
